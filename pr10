@@ -1,0 +1,77 @@
+import React, { createContext, useContext, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { FaSun, FaMoon } from "react-icons/fa";
+
+// Theme Context Setup
+const ThemeContext = createContext();
+const useTheme = () => useContext(ThemeContext);
+
+const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState("light");
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// App UI
+const App = () => {
+  const { theme, toggleTheme } = useTheme();
+
+  const styles = {
+    app: {
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme === "light" ? "#f0f0f0" : "#333",
+      color: theme === "light" ? "#333" : "#f0f0f0",
+      transition: "all 0.3s ease",
+      fontFamily: "Arial, sans-serif",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "80%",
+      maxWidth: "500px",
+      margin: "20px auto",
+    },
+    button: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      fontSize: "1.5rem",
+      color: theme === "light" ? "#333" : "#f0f0f0",
+    },
+    main: {
+      textAlign: "center",
+      marginTop: "1rem",
+    },
+  };
+
+  return (
+    <div style={styles.app}>
+      <header style={styles.header}>
+        <h1>Theme Switcher App</h1>
+        <button onClick={toggleTheme} style={styles.button}>
+          {theme === "light" ? <FaMoon /> : <FaSun />}
+        </button>
+      </header>
+      <main style={styles.main}>
+        <p>This is a simple theme switcher application using React Context API.</p>
+      </main>
+    </div>
+  );
+};
+
+// Render everything
+createRoot(document.getElementById("root")).render(
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
